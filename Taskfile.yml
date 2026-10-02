@@ -1,0 +1,22 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+
+version: '3'
+
+tasks:
+  run-back-dev:
+    dir: services/api
+    cmds:
+      # Run the Golang API
+      - go run ./cmd/web/main.go
+
+
+  run-front-dev:
+    dir: apps/web
+    cmds:
+      # Run Frontend Application
+      - npm run dev
+
+  run-dev:
+    cmds:
+      - task run-back-dev
+      - task run-front-dev
