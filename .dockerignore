@@ -1,0 +1,13 @@
+# .dockerignore
+**/node_modules
+**/dist
+**/.vite
+**/*.log
+.git
+.env
+**/.env.*
+!**/.env.example
+
+# o Go não entra no build do front:
+# mudar um .go não invalida o cache do web
+apps/api

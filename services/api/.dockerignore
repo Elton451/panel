@@ -1,0 +1,5 @@
+# apps/api/.dockerignore
+tmp/
+*.log
+.env
+Dockerfile

@@ -1,0 +1,31 @@
+ARG GO_VERSION=1.27
+
+FROM golang:${GO_VERSION}-alpine AS base
+WORKDIR /src
+
+
+COPY go.mod go.sum ./
+RUN --mount=type=cache,target=/go/pkg/mod \
+  go mod download
+
+
+FROM base AS dev
+RUN go install github.com/air-verse/air@latest
+COPY . .
+EXPOSE 8080
+CMD ['air', '-c', '.air.toml']
+
+
+FROM base AS build
+COPY . .
+RUN --mount=type=cache,target=/go/pkg/mod \
+    --mount=type=cache,target=/root/.cache/go-build \
+    CGO_ENABLED=0 GOOS=linux \
+    go build -trimpath -ldflags="-s -w" -o /out/server ./cmd/server
+
+
+FROM gcr.io/distroless/static-debian12:nonroot AS runtime
+COPY --from=build /out/server /server
+EXPOSE 8080
+USER nonroot:nonroot
+ENTRYPOINT ["/server"]
