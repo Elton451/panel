@@ -1,0 +1,32 @@
+-- +goose Up
+CREATE TABLE IF NOT EXISTS users (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  firstName VARCHAR(20) NOT NULL,
+  lastName VARCHAR(20) NOT NULL
+);
+
+CREATE TABLE orders (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    status ENUM('WAITING_PAYMENT', 'PREPARING', 'SENT', 'ON_ROUTE', 'RECEIVED', 'CANCELLED') NOT NULL DEFAULT 'WAITING_PAYMENT',
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    user_id BIGINT UNSIGNED NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE INDEX idx_orders_status_created
+  ON orders (status, created_at DESC, id DESC);
+
+CREATE TABLE order_items(
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(150) NOT NULL,
+    description VARCHAR(1000) NOT NULL,
+    price BIGINT UNSIGNED NOT NULL,
+    price_cents INT UNSIGNED NOT NULL,
+    order_id BIGINT UNSIGNED NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(id)
+);
+
+-- +goose Down
+DROP TABLE order_items;
+DROP TABLE orders;
+DROP TABLE users;
