@@ -3,7 +3,6 @@ ARG GO_VERSION=1.27
 FROM golang:${GO_VERSION}-alpine AS base
 WORKDIR /src
 
-
 COPY go.mod go.sum ./
 RUN --mount=type=cache,target=/go/pkg/mod \
   go mod download

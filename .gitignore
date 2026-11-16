@@ -1,1 +1,4 @@
 node_modules/
+
+services/api/.env
+.env

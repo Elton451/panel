@@ -21,10 +21,8 @@ type Application struct {
 }
 
 func main() {
-	config, err := config.Load()
-
 	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
-
+	config, err := config.Load()
 	if err != nil {
 		log.Fatal("Error while loading application config", err)
 	}
@@ -52,6 +50,7 @@ func main() {
 	}
 }
 
+// TODO: Refactor this to internal
 func openDB(connector string) (*sql.DB, error) {
 	db, err := sql.Open("mysql", connector)
 	if err != nil {
